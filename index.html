@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet" type="text/css">
+  <link rel="icon" type="image/png" href="images/icon.png">
+
+  <title>opsu!</title>
+  <style>
+    /* === Neon Blue & White Theme === */
+    :root {
+      --neon-blue: #00f3ff;
+      --neon-blue-glow: 0 0 12px #00b3ff, 0 0 24px #0066ff;
+      --dark-bg: #020814;
+      --light-text: white;
+      --card-bg: #0a1128;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      font-family: 'Exo 2', sans-serif;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 2px solid var(--neon-blue);
+      box-shadow: var(--neon-blue-glow);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 8px;
+      color: var(--neon-blue);
+      text-shadow: var(--neon-blue-glow);
+    }
+
+    header h2 {
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .button {
+      display: inline-block;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      padding: 10px 20px;
+      margin: 8px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+      text-align: center;
+    }
+
+    .button:hover {
+      background: var(--neon-blue);
+      color: var(--dark-bg);
+      box-shadow: var(--neon-blue-glow);
+      transform: scale(1.05);
+    }
+
+    #content-wrapper {
+      padding: 20px;
+    }
+
+    .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    #main-content {
+      flex: 3;
+      min-width: 300px;
+    }
+
+    #sidebar {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    h2 {
+      color: var(--neon-blue);
+      margin: 30px 0 16px;
+      font-size: 1.8rem;
+      text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+    }
+
+    p, ul, ol {
+      margin-bottom: 16px;
+    }
+
+    a {
+      color: var(--neon-blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* === Download Section - Responsive === */
+    .download-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .download-section .button {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+      .download-section {
+        flex-direction: column;
+      }
+      .download-android { order: 1; }
+      .download-windows { order: 2; }
+      .download-desktop { order: 3; }
+    }
+
+    @media (min-width: 769px) {
+      .download-section {
+        flex-direction: row;
+      }
+      .download-desktop { order: 1; }
+      .download-windows { order: 2; }
+      .download-android { order: 3; }
+    }
+
+    /* === Gallery Styling === */
+    .pswp-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .pswp-gallery img {
+      width: 100%;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      border-radius: 6px;
+      transition: transform 0.2s;
+    }
+
+    .pswp-gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(0, 243, 255, 0.7);
+    }
+
+    /* === Dropdown for Latest Updates === */
+    .dropdown-container {
+      position: relative;
+      display: inline-block;
+      margin: 16px 0;
+    }
+
+    .dropdown-btn {
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+      font-family: 'Exo 2', sans-serif;
+      width: 100%;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-btn:hover {
+      background: var(--neon-blue);
+      color: var(--dark-bg);
+      box-shadow: var(--neon-blue-glow);
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--neon-blue);
+      border-radius: 8px;
+      margin-top: 8px;
+      padding: 12px 0;
+      z-index: 20;
+      overflow: hidden;
+
+      /* Animasi */
+      max-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: max-height 0.35s ease, opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 20px;
+      color: var(--neon-blue);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-content a:hover {
+      background: rgba(0, 243, 255, 0.1);
+      text-decoration: underline;
+    }
+
+    /* Desktop: hover on container keeps dropdown open */
+    @media (min-width: 769px) {
+      .dropdown-container:hover .dropdown-content {
+        max-height: 300px;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* Mobile: controlled by JS class */
+    @media (max-width: 768px) {
+      .dropdown-container.is-open .dropdown-content {
+        max-height: 300px;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  </style>
+
+  <script>
+    // Toggle dropdown on mobile click
+    document.addEventListener('DOMContentLoaded', () => {
+      const dropdowns = document.querySelectorAll('.dropdown-container');
+      dropdowns.forEach(container => {
+        const btn = container.querySelector('.dropdown-btn');
+        btn.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            container.classList.toggle('is-open');
+          }
+        });
+      });
+    });
+  </script>
+
+  <!-- Photoswipe Scripts -->
+  <script src="javascripts/photoswipe.min.js"></script>
+  <script src="javascripts/photoswipe-ui-default.min.js"></script>
+  <script src="javascripts/main.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>opsu!</h1>
+    <h2>an open-source osu! client</h2>
+    <a href="https://github.com/itdelatrisu/opsu" class="button"><small>View project on</small> GitHub</a>
+  </header>
+
+  <div id="content-wrapper">
+    <div class="inner clearfix">
+      <section id="main-content">
+        <div class="download-section">
+          <a href="https://github.com/fluddokt/opsu/releases/download/0.16.1a/Opsu-android0.16.1a.apk" class="button download-android">
+            <small>Android Release</small><br>opsu-0.16.1a.apk
+          </a>
+          <a href="https://drive.google.com/file/d/1wqnxEsVEEZeENpCnNrAsZnti_yC7GgEJ/view?usp=sharing" class="button download-windows">
+            <small>Windows Release</small><br>opsu-windows.exe
+          </a>
+          <a href="https://github.com/itdelatrisu/opsu/releases/download/0.16.1/opsu-0.16.1.jar" class="button download-desktop">
+            <small>Desktop Release</small><br>opsu-0.16.1.jar
+          </a>
+        </div>
+
+        <h2 id="about">About</h2>
+        <p><strong>opsu!</strong> is an unofficial open-source client for the rhythm game
+          <a href="https://osu.ppy.sh/">osu!</a>, written in Java using
+          <a href="http://slick.ninjacave.com/">Slick2D</a> and <a href="http://lwjgl.org/">LWJGL</a>
+          (wrappers around OpenGL and OpenAL).</p>
+        <p>opsu! runs on Windows, OS X, Linux. A <a href="https://github.com/fluddokt/opsu">libGDX port</a>
+          also supports Android devices.</p>
+
+        <h2 id="latest-updates">Latest Updates</h2>
+        <div class="dropdown-container">
+          <button class="dropdown-btn">▼ View Release History</button>
+          <div class="dropdown-content">
+            <a href="https://github.com/fluddokt/opsu/releases/tag/0.16.1a">
+              <code>06.11.17</code> Android v0.16.1a
+			</a>
+			<a href="https://drive.google.com/file/d/1wqnxEsVEEZeENpCnNrAsZnti_yC7GgEJ/view?usp=sharing">
+              <code>06.11.17</code> Windows v0.16.1
+            </a>
+            <a href="https://github.com/itdelatrisu/opsu/releases/tag/0.16.1">
+              <code>06.03.18</code> Desktop v0.16.1
+            </a>
+            <a href="https://github.com/fluddokt/opsu/releases/tag/0.16.0b">
+              <code>09.17.17</code> Android v0.16.0b
+            </a>
+            <a href="https://github.com/fluddokt/opsu/releases/tag/0.16.0a">
+              <code>09.04.17</code> Android v0.16.0a
+            </a>
+            <a href="https://github.com/itdelatrisu/opsu/releases/tag/0.16.0">
+              <code>07.02.17</code> Desktop v0.16.0
+            </a>
+          </div>
+        </div>
+
+        <h2 id="getting-started">Getting Started</h2>
+        <p>Get a copy of opsu! from the <a href="https://github.com/itdelatrisu/opsu/releases">releases</a> page.
+          APK releases can be found <a href="https://github.com/fluddokt/opsu/releases">here</a>.<br />
+          For detailed setup and building instructions, see the <a href="https://github.com/itdelatrisu/opsu/blob/master/README.md">README</a>.</p>
+
+        <h2 id="credits">Credits</h2>
+        <p>This software was created by Jeffrey Han 
+          (<a href="https://github.com/itdelatrisu/">@itdelatrisu</a>). All game concepts and
+          designs are based on work by osu! developer Dean Herbert. Other credits can
+          be found <a href="https://github.com/itdelatrisu/opsu/blob/master/CREDITS.md">here</a>.</p>
+
+        <h2 id="license">License</h2>
+        <p>This software is licensed under GNU GPL version 3.
+          You can find the full text of the license <a href="https://github.com/itdelatrisu/opsu/blob/master/LICENSE">here</a>.</p>
+
+        <h2 id="screenshots">Screenshots</h2>
+        <div class="pswp-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s01.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t01.png" itemprop="thumbnail" alt="Main Menu" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s02.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t02.png" itemprop="thumbnail" alt="Song Menu" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s03.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t03.png" itemprop="thumbnail" alt="Gameplay 1" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s04.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t04.png" itemprop="thumbnail" alt="Gameplay 2" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s05.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t05.png" itemprop="thumbnail" alt="Gameplay 3" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s06.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t06.png" itemprop="thumbnail" alt="Game Ranking" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s07.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t07.png" itemprop="thumbnail" alt="Mod Select" />
+            </a>
+          </figure>
+          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+            <a href="https://itdelatrisu.github.io/opsu/images/screenshots/s08.png" itemprop="contentUrl" data-size="1440x900">
+              <img src="https://itdelatrisu.github.io/opsu/images/screenshots/t08.png" itemprop="thumbnail" alt="Downloads" />
+            </a>
+          </figure>
+        </div>
+      </section>
+
+      <aside id="sidebar">
+        <p class="repo-owner"><a href="https://github.com/itdelatrisu/opsu">opsu!</a> is maintained by <a href="https://github.com/itdelatrisu">Jeffrey Han</a>.</p>
+        <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> with a custom neon-blue theme.</p>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Photoswipe Lightbox -->
+  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+    <div class="pswp__scroll-wrap">
+      <div class="pswp__container">
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+      </div>
+      <div class="pswp__ui pswp__ui--hidden">
+        <div class="pswp__top-bar">
+          <div class="pswp__counter"></div>
+          <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+          <button class="pswp__button pswp__button--share" title="Share"></button>
+          <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+          <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+          <div class="pswp__preloader">
+            <div class="pswp__preloader__icn">
+              <div class="pswp__preloader__cut">
+                <div class="pswp__preloader__donut"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+          <div class="pswp__share-tooltip"></div> 
+        </div>
+        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+        <div class="pswp__caption">
+          <div class="pswp__caption__center"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
